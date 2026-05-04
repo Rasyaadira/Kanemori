@@ -1,0 +1,24 @@
+nohup: ignoring input
+
+> finance-tracker@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.15
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.15:3000
+
+ ✓ Starting...
+ ✓ Ready in 1343ms
+ ○ Compiling /categories ...
+ ✓ Compiled /categories in 980ms (625 modules)
+ GET /categories 200 in 1289ms
+ ○ Compiling /api/categories ...
+ ✓ Compiled /api/categories in 793ms (648 modules)
+ GET /api/categories 200 in 898ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1211ms (1793 modules)
+ GET / 200 in 1580ms
+ GET / 200 in 1587ms
+ ✓ Compiled /api/dashboard in 383ms (1834 modules)
+ GET /api/dashboard 200 in 465ms
+ GET /api/dashboard 200 in 13ms
