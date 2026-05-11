@@ -56,7 +56,53 @@ export default function SettingsPage() {
       body: JSON.stringify({ key: 'hide_all_balances', value: String(next) }) });
   };
 
-  const handleExport = () => { window.open('/api/backup', '_blank'); };
+  const handleExport = async () => {
+    const backupName = `finance-backup-${new Date().toISOString().slice(0, 10)}.db`;
+    setRestoreStatus('Preparing backup...');
+
+    try {
+      const res = await fetch('/api/backup');
+      if (!res.ok) throw new Error('Backup failed');
+      const blob = await res.blob();
+
+      const saveFilePicker = (window as typeof window & {
+        showSaveFilePicker?: (options: {
+          suggestedName?: string;
+          types?: Array<{
+            description: string;
+            accept: Record<string, string[]>;
+          }>;
+        }) => Promise<FileSystemFileHandle>;
+      }).showSaveFilePicker;
+
+      if (saveFilePicker) {
+        const handle = await saveFilePicker({
+          suggestedName: backupName,
+          types: [{ description: 'SQLite Database', accept: { 'application/vnd.sqlite3': ['.db'] } }],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        setRestoreStatus('Backup saved successfully.');
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = backupName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        setRestoreStatus('Backup downloaded. Check your Downloads folder.');
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        setRestoreStatus('Backup canceled.');
+      } else {
+        setRestoreStatus('Backup failed.');
+      }
+    }
+  };
 
   const handleRestore = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
