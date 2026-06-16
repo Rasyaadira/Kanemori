@@ -5,17 +5,22 @@ import fs from 'fs';
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_PATH = path.join(DB_DIR, 'finance.db');
 
-let db: Database.Database | null = null;
+declare global {
+  // eslint-disable-next-line no-var
+  var __db: Database.Database | undefined;
+}
 
+/**
+ * Get or create a database connection.
+ */
 export function getDb(): Database.Database {
-  if (db) {
+  if (globalThis.__db) {
     try {
-      // Quick health check — if this throws, the cached connection is stale/corrupt
-      db.prepare('SELECT 1').get();
-      return db;
+      globalThis.__db.prepare('SELECT 1').get();
+      return globalThis.__db;
     } catch {
-      try { db.close(); } catch {}
-      db = null;
+      try { globalThis.__db.close(); } catch { /* ignore */ }
+      globalThis.__db = undefined;
     }
   }
 
@@ -23,14 +28,48 @@ export function getDb(): Database.Database {
     fs.mkdirSync(DB_DIR, { recursive: true });
   }
 
-  db = new Database(DB_PATH);
-  db.pragma('journal_mode = WAL');
-  db.pragma('foreign_keys = ON');
+  const newDb = new Database(DB_PATH);
 
-  initTables(db);
-  seedData(db);
+  // === PRAGMA: Stability & Performance ===
+  newDb.pragma('journal_mode = WAL');
+  newDb.pragma('foreign_keys = ON');
+  newDb.pragma('busy_timeout = 5000');
+  newDb.pragma('wal_autocheckpoint = 1000');
+  newDb.pragma('auto_vacuum = INCREMENTAL');
+  newDb.pragma('cache_size = -8000');
+  newDb.pragma('synchronous = NORMAL');
 
-  return db;
+  initTables(newDb);
+  seedData(newDb);
+
+  globalThis.__db = newDb;
+  return newDb;
+}
+
+/**
+ * Invalidate the cached DB connection.
+ * Call this after restore operations to force a fresh connection.
+ */
+export function invalidateDbConnection(): void {
+  if (globalThis.__db) {
+    try {
+      // Checkpoint WAL before closing to ensure all data is flushed
+      globalThis.__db.pragma('wal_checkpoint(TRUNCATE)');
+      globalThis.__db.close();
+    } catch { /* ignore */ }
+    globalThis.__db = undefined;
+  }
+}
+
+/**
+ * Safely checkpoint and get a consistent DB snapshot for backup.
+ * Returns the path to the database file after WAL checkpoint.
+ */
+export function checkpointForBackup(): string {
+  const conn = getDb();
+  // Force all WAL data into the main DB file so backup gets complete data
+  conn.pragma('wal_checkpoint(TRUNCATE)');
+  return DB_PATH;
 }
 
 function initTables(db: Database.Database) {

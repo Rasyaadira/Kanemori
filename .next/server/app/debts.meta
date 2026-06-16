@@ -3,5 +3,13 @@
     "x-nextjs-stale-time": "300",
     "x-nextjs-prerender": "1",
     "x-next-cache-tags": "_N_T_/layout,_N_T_/debts/layout,_N_T_/debts/page,_N_T_/debts"
-  }
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/debts/__PAGE__",
+    "/debts",
+    "/_index",
+    "/_head"
+  ]
 }

@@ -1,0 +1,12 @@
+
+> kanemori@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.7:3000
+✓ Ready in 604ms
+
+ HEAD /api/dashboard?month=2026-06 200 in 712ms (next.js: 664ms, application-code: 48ms)
+ GET /api/dashboard?month=2026-06 200 in 22ms (next.js: 5ms, application-code: 17ms)
+[?25h

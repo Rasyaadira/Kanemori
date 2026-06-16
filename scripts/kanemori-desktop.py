@@ -24,10 +24,10 @@ from PySide6.QtWidgets import (
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 APP_NAME = 'Kanemori'
-APP_DIR = Path.home() / 'Projects/FinanceTracker/V1'
+APP_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = APP_DIR / 'logs'
 LOG_FILE = LOG_DIR / 'app.log'
-PID_FILE = LOG_DIR / 'finance-tracker.pid'
+PID_FILE = LOG_DIR / 'kanemori.pid'
 URL = 'http://127.0.0.1:3000'
 PORT = 3000
 

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { safeHandler } from '@/lib/api-handler';
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export const GET = safeHandler(async (_req: Request, { params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const db = getDb();
   const account = db.prepare('SELECT * FROM accounts WHERE id = ?').get(id) as any;
@@ -37,31 +38,26 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const tracked_balance = incoming.total - outgoing.total - adminFees.total - debtPayments.total + debtCollections.total;
 
   return NextResponse.json({ ...account, tracked_balance });
-}
+});
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { id } = await params;
-    const db = getDb();
-    const body = await request.json();
-    const { name, type, balance, is_active, notes, hide_balance } = body;
+export const PUT = safeHandler(async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+  const db = getDb();
+  const body = await request.json();
+  const { name, type, balance, is_active, notes, hide_balance } = body;
 
-    db.prepare(
-      `UPDATE accounts SET name=?, type=?, balance=?, is_active=?, notes=?, hide_balance=?, updated_at=datetime('now')
-       WHERE id=?`
-    ).run(name, type, balance ?? 0, is_active ?? 1, notes || null, hide_balance ?? 0, id);
+  db.prepare(
+    `UPDATE accounts SET name=?, type=?, balance=?, is_active=?, notes=?, hide_balance=?, updated_at=datetime('now')
+     WHERE id=?`
+  ).run(name, type, balance ?? 0, is_active ?? 1, notes || null, hide_balance ?? 0, id);
 
-    const account = db.prepare('SELECT * FROM accounts WHERE id = ?').get(id);
-    return NextResponse.json(account);
-  } catch (error) {
-    console.error('Update account error:', error);
-    return NextResponse.json({ error: 'Failed to update account' }, { status: 500 });
-  }
-}
+  const account = db.prepare('SELECT * FROM accounts WHERE id = ?').get(id);
+  return NextResponse.json(account);
+});
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export const DELETE = safeHandler(async (_req: Request, { params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const db = getDb();
   db.prepare('UPDATE accounts SET is_active = 0 WHERE id = ?').run(id);
   return NextResponse.json({ success: true });
-}
+});

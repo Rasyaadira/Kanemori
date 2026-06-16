@@ -60,6 +60,7 @@ export default function DashboardPage() {
   }
 
   if (!data) return <p style={{ color: 'var(--text-muted)', padding: 32 }}>Failed to load dashboard.</p>;
+  if ('error' in data) return <p style={{ color: 'var(--text-danger)', padding: 32 }}>{(data as any).error}</p>;
 
   const maskCurrency = (value: number) => data.hideAllBalances ? '•••••' : formatCurrency(value);
   const maskCurrencyWithSign = (value: number) => data.hideAllBalances ? '•••••' : formatCurrencyWithSign(value);

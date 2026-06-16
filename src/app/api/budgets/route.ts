@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { safeHandler } from '@/lib/api-handler';
 
-export async function GET(request: Request) {
+export const GET = safeHandler(async (request: Request) => {
   const db = getDb();
   const { searchParams } = new URL(request.url);
   const month = searchParams.get('month');
@@ -16,17 +17,13 @@ export async function GET(request: Request) {
      WHERE b.month = ? ORDER BY spent DESC`
   ).all(month);
   return NextResponse.json(budgets);
-}
+});
 
-export async function POST(request: Request) {
-  try {
-    const db = getDb();
-    const { category_id, month, amount } = await request.json();
-    db.prepare(
-      `INSERT OR REPLACE INTO budgets (category_id, month, amount) VALUES (?, ?, ?)`
-    ).run(category_id, month, amount);
-    return NextResponse.json({ success: true }, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed' }, { status: 500 });
-  }
-}
+export const POST = safeHandler(async (request: Request) => {
+  const db = getDb();
+  const { category_id, month, amount } = await request.json();
+  db.prepare(
+    `INSERT OR REPLACE INTO budgets (category_id, month, amount) VALUES (?, ?, ?)`
+  ).run(category_id, month, amount);
+  return NextResponse.json({ success: true }, { status: 201 });
+});

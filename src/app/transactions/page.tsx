@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Plus, Search, ArrowDownRight, ArrowUpRight, ArrowLeftRight, Trash2 } from 'lucide-react';
+import { Plus, Search, ArrowDownRight, ArrowUpRight, ArrowLeftRight, Trash2, FileSpreadsheet, FileText, Loader2 } from 'lucide-react';
 import { formatCurrency, formatDate, TRANSACTION_TYPES } from '@/lib/utils';
 import TransactionModal from '@/components/TransactionModal';
 
@@ -18,6 +18,7 @@ export default function TransactionsPage() {
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState('');
+  const [exporting, setExporting] = useState<string | null>(null);
 
   const fetchTransactions = useCallback(() => {
     const params = new URLSearchParams();
@@ -37,6 +38,27 @@ export default function TransactionsPage() {
     fetchTransactions();
   };
 
+  const handleExport = async (format: 'xlsx' | 'csv') => {
+    setExporting(format);
+    try {
+      const url = `/api/export?format=${format}&month=all`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Export failed');
+
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      const ext = format === 'xlsx' ? 'xlsx' : 'csv';
+      a.download = `kanemori-all-${new Date().toISOString().slice(0, 10)}.${ext}`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch (err) {
+      alert('Export failed. Please try again.');
+    } finally {
+      setExporting(null);
+    }
+  };
+
   const typeIcon = (t: string) => {
     if (t === 'income') return <ArrowUpRight size={14} />;
     if (t === 'expense') return <ArrowDownRight size={14} />;
@@ -46,8 +68,41 @@ export default function TransactionsPage() {
   return (
     <>
       <div className="page-header">
-        <div><h1>Transactions</h1><p className="page-header-subtitle">{total} transactions total</p></div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}><Plus size={18} /> New Transaction</button>
+        <div>
+          <h1>Transactions</h1>
+          <p className="page-header-subtitle">{total} transactions total</p>
+        </div>
+        <div className="page-header-actions" style={{ display: 'flex', gap: 10 }}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => handleExport('xlsx')}
+            disabled={exporting !== null}
+            title="Export all data to Excel"
+          >
+            {exporting === 'xlsx' ? (
+              <Loader2 size={16} className="spin" />
+            ) : (
+              <FileSpreadsheet size={16} />
+            )}
+            Export Excel
+          </button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => handleExport('csv')}
+            disabled={exporting !== null}
+            title="Export all transactions to CSV"
+          >
+            {exporting === 'csv' ? (
+              <Loader2 size={16} className="spin" />
+            ) : (
+              <FileText size={16} />
+            )}
+            Export CSV
+          </button>
+          <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
+            <Plus size={16} /> New Transaction
+          </button>
+        </div>
       </div>
 
       {/* Filter Bar */}

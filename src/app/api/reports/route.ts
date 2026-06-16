@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { safeHandler } from '@/lib/api-handler';
 import { format, parseISO, subMonths } from 'date-fns';
 
-export async function GET(request: Request) {
+export const GET = safeHandler(async (request: Request) => {
   const db = getDb();
   const { searchParams } = new URL(request.url);
   const month = searchParams.get('month') || format(new Date(), 'yyyy-MM');
@@ -51,4 +52,4 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.json({ totalIncome, totalExpense, expenseByCategory, incomeByCategory, monthlyTrend });
-}
+});

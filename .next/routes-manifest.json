@@ -1,6 +1,7 @@
 {
   "version": 3,
   "pages404": true,
+  "appType": "app",
   "caseSensitive": false,
   "basePath": "",
   "redirects": [
@@ -8,11 +9,13 @@
       "source": "/:path+/",
       "destination": "/:path+",
       "internal": true,
+      "priority": true,
       "statusCode": 308,
       "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
     }
   ],
   "headers": [],
+  "onMatchHeaders": [],
   "rewrites": {
     "beforeFiles": [],
     "afterFiles": [],
@@ -92,6 +95,12 @@
       "namedRegex": "^/(?:/)?$"
     },
     {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
       "page": "/_not-found",
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
@@ -102,6 +111,90 @@
       "regex": "^/accounts(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/accounts(?:/)?$"
+    },
+    {
+      "page": "/api/accounts",
+      "regex": "^/api/accounts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/accounts(?:/)?$"
+    },
+    {
+      "page": "/api/backup",
+      "regex": "^/api/backup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/backup(?:/)?$"
+    },
+    {
+      "page": "/api/budgets",
+      "regex": "^/api/budgets(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/budgets(?:/)?$"
+    },
+    {
+      "page": "/api/categories",
+      "regex": "^/api/categories(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/categories(?:/)?$"
+    },
+    {
+      "page": "/api/dashboard",
+      "regex": "^/api/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/dashboard(?:/)?$"
+    },
+    {
+      "page": "/api/debts",
+      "regex": "^/api/debts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/debts(?:/)?$"
+    },
+    {
+      "page": "/api/export",
+      "regex": "^/api/export(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/export(?:/)?$"
+    },
+    {
+      "page": "/api/export/notion",
+      "regex": "^/api/export/notion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/export/notion(?:/)?$"
+    },
+    {
+      "page": "/api/goals",
+      "regex": "^/api/goals(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/goals(?:/)?$"
+    },
+    {
+      "page": "/api/reports",
+      "regex": "^/api/reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/reports(?:/)?$"
+    },
+    {
+      "page": "/api/restore",
+      "regex": "^/api/restore(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/restore(?:/)?$"
+    },
+    {
+      "page": "/api/settings",
+      "regex": "^/api/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/settings(?:/)?$"
+    },
+    {
+      "page": "/api/test",
+      "regex": "^/api/test(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/test(?:/)?$"
+    },
+    {
+      "page": "/api/transactions",
+      "regex": "^/api/transactions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/transactions(?:/)?$"
     },
     {
       "page": "/apple-icon.png",
@@ -166,10 +259,11 @@
     "didPostponeHeader": "x-nextjs-postponed",
     "contentTypeHeader": "text/x-component",
     "suffix": ".rsc",
-    "prefetchSuffix": ".prefetch.rsc",
     "prefetchSegmentHeader": "next-router-segment-prefetch",
     "prefetchSegmentSuffix": ".segment.rsc",
-    "prefetchSegmentDirSuffix": ".segments"
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
   },
   "rewriteHeaders": {
     "pathHeader": "x-nextjs-rewritten-path",

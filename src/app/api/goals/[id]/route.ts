@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { safeHandler } from '@/lib/api-handler';
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export const PUT = safeHandler(async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const db = getDb();
   const body = await request.json();
@@ -26,9 +27,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     id
   );
   return NextResponse.json(db.prepare('SELECT * FROM goals WHERE id = ?').get(id));
-}
+});
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export const DELETE = safeHandler(async (_req: Request, { params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const db = getDb();
 
@@ -39,4 +40,4 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
 
   txn();
   return NextResponse.json({ success: true });
-}
+});

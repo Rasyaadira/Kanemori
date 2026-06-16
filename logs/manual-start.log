@@ -1,0 +1,58 @@
+
+> finance-tracker@0.1.0 start
+> next start
+
+   ▲ Next.js 15.5.15
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.23:3000
+
+ ✓ Starting...
+ ✓ Ready in 512ms
+Create transaction error: SqliteError: database is locked
+    at <unknown> (.next/server/app/api/transactions/route.js:10:50)
+    at x (.next/server/app/api/transactions/route.js:10:651)
+    at async k (.next/server/app/api/transactions/route.js:16:2846)
+    at async g (.next/server/app/api/transactions/route.js:16:3849)
+    at async D (.next/server/app/api/transactions/route.js:16:4971) {
+  code: 'SQLITE_BUSY'
+}
+Create transaction error: SqliteError: database is locked
+    at <unknown> (.next/server/app/api/transactions/route.js:10:50)
+    at x (.next/server/app/api/transactions/route.js:10:651)
+    at async k (.next/server/app/api/transactions/route.js:16:2846)
+    at async g (.next/server/app/api/transactions/route.js:16:3849)
+    at async D (.next/server/app/api/transactions/route.js:16:4971) {
+  code: 'SQLITE_BUSY'
+}
+Create transaction error: SqliteError: database is locked
+    at <unknown> (.next/server/app/api/transactions/route.js:10:50)
+    at x (.next/server/app/api/transactions/route.js:10:651)
+    at async k (.next/server/app/api/transactions/route.js:16:2846)
+    at async g (.next/server/app/api/transactions/route.js:16:3849)
+    at async D (.next/server/app/api/transactions/route.js:16:4971) {
+  code: 'SQLITE_BUSY'
+}
+Create transaction error: SqliteError: database is locked
+    at <unknown> (.next/server/app/api/transactions/route.js:10:50)
+    at x (.next/server/app/api/transactions/route.js:10:651)
+    at async k (.next/server/app/api/transactions/route.js:16:2846)
+    at async g (.next/server/app/api/transactions/route.js:16:3849)
+    at async D (.next/server/app/api/transactions/route.js:16:4971) {
+  code: 'SQLITE_BUSY'
+}
+Create transaction error: SqliteError: database is locked
+    at <unknown> (.next/server/app/api/transactions/route.js:10:50)
+    at x (.next/server/app/api/transactions/route.js:10:651)
+    at async k (.next/server/app/api/transactions/route.js:16:2846)
+    at async g (.next/server/app/api/transactions/route.js:16:3849)
+    at async D (.next/server/app/api/transactions/route.js:16:4971) {
+  code: 'SQLITE_BUSY'
+}
+Create transaction error: SqliteError: database is locked
+    at <unknown> (.next/server/app/api/transactions/route.js:10:50)
+    at x (.next/server/app/api/transactions/route.js:10:651)
+    at async k (.next/server/app/api/transactions/route.js:16:2846)
+    at async g (.next/server/app/api/transactions/route.js:16:3849)
+    at async D (.next/server/app/api/transactions/route.js:16:4971) {
+  code: 'SQLITE_BUSY'
+}
