@@ -65,7 +65,7 @@ Kanemori includes scripts to run seamlessly from your desktop environment:
 - **Kanemori Shortcut:** Starts the local server and opens your web browser.
 - **Kanemori Control:** A small GUI to manage the server status.
 
-For detailed instructions on troubleshooting, database backups, and manual rebuilds, please refer to the [Maintenance Guide (GEMINI.md)](./GEMINI.md).
+For detailed instructions on troubleshooting, database backups, and manual rebuilds, please refer to the [Maintenance Guide (guide.md)](./guide.md).
 
 ## 🛡 License
 
