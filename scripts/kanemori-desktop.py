@@ -54,6 +54,14 @@ def build_exists() -> bool:
     return (APP_DIR / '.next' / 'BUILD_ID').exists()
 
 
+def check_native_modules() -> bool:
+    try:
+        subprocess.run(['node', '-e', "require('better-sqlite3')"], capture_output=True, check=True)
+        return True
+    except Exception:
+        return False
+
+
 def run_logged(command: list[str], status_cb=None):
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     if status_cb:
@@ -150,6 +158,20 @@ class KanemoriWindow(QMainWindow):
             self.started_server = False
             return
 
+        # 1. Check native modules (better-sqlite3)
+        if not check_native_modules():
+            self.set_status('Repairing database modules (this happens after system updates)...')
+            run_logged(['npm', 'rebuild', 'better-sqlite3'], status_cb=self.set_status)
+            # Force rebuild Next.js cache if native modules were broken
+            next_dir = APP_DIR / '.next'
+            if next_dir.exists():
+                import shutil
+                try:
+                    shutil.rmtree(next_dir)
+                except Exception:
+                    pass
+
+        # 2. Check if build exists
         if not build_exists():
             self.set_status('Building app for first launch, this can take a bit...')
             run_logged(['npm', 'run', 'build'], status_cb=self.set_status)
@@ -204,8 +226,16 @@ class KanemoriWindow(QMainWindow):
         self.set_status(f'Starting local server, please wait... ({self.poll_attempts}s)')
 
     def on_page_loaded(self, ok: bool):
-        if not ok or self.ready:
+        if self.ready:
             return
+            
+        if not ok:
+            # If it's a first-load failure, try one more time after a short delay
+            # sometimes Next.js is still hydrating
+            self.set_status('App interface taking longer than usual, retrying...')
+            QTimer.singleShot(2000, lambda: self.browser.setUrl(QUrl(URL)))
+            return
+
         self.ready = True
         self.toolbar.setVisible(True)
         self.container_layout.removeWidget(self.loading)
